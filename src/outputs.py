@@ -30,7 +30,7 @@ def default_output(results):
             print(*row)
 
 
-def pretty_output(results, cli_args):
+def pretty_output(results, cli_args=None):
     table = PrettyTable()
     if isinstance(results, dict):
         table.field_names = list(results.keys())

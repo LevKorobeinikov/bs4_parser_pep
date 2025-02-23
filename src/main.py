@@ -12,7 +12,6 @@ from constants import (
     UNKNOWN_MODE
 )
 from configs import configure_argument_parser, configure_logging
-from exceptions import PageLoadException
 from outputs import control_output
 from utils import find_tag, get_soup, get_results_dict
 
