@@ -6,7 +6,7 @@ import requests_cache
 from tqdm import tqdm
 
 from constants import (
-    ARGUMENTS, BAD_LINK, CRITICAL_ERROR, DOWNLOADS_DIR, ERROR_LOG,
+    ARGUMENTS, BAD_LINK, BASE_DIR, CRITICAL_ERROR, ERROR_LOG,
     EXPECTED_STATUS, LINKS_LOG, LINK_TITLE_EDITOR_AUTHOR, LINK_VERSION_STATUS,
     MAIN_DOC_URL, MAIN_PEP_URL, PARSER_COMPLETE, PARSER_START,
     UNKNOWN_MODE
@@ -85,8 +85,11 @@ def download(session):
             'div[role="main"] > table a[href$="pdf-a4.zip"]')['href']
     )
     filename = archive_url.split('/')[-1]
-    DOWNLOADS_DIR.mkdir(exist_ok=True)
-    archive_path = DOWNLOADS_DIR / filename
+    # = BASE_DIR / 'downloads' для теста ЯП
+    # должна быть константа  DOWNLOADS_DIR
+    downloads_dir = BASE_DIR / 'downloads'
+    downloads_dir.mkdir(exist_ok=True)
+    archive_path = downloads_dir / filename
     response = session.get(archive_url)
     with open(archive_path, 'wb') as file:
         file.write(response.content)
