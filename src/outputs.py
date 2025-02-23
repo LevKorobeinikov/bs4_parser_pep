@@ -5,7 +5,7 @@ import logging
 from prettytable import PrettyTable
 
 from constants import (
-    DATETIME_FORMAT, RESULTS_SAVE, RESULTA_DIR,
+    DATETIME_FORMAT, RESULTS_SAVE, RESULTS,
     STATUS_COUNT, PRETTY, FILE
 )
 
@@ -21,7 +21,7 @@ def control_output(results, cli_args):
     output_handler(results, cli_args)
 
 
-def default_output(results):
+def default_output(results, cli_args=None):
     if isinstance(results, dict):
         for key, value in results.items():
             print(f'{key}: {value}')
@@ -43,12 +43,11 @@ def pretty_output(results, cli_args=None):
 
 
 def file_output(results, cli_args):
-    results_dir = RESULTA_DIR
-    results_dir.mkdir(exist_ok=True)
+    RESULTS.mkdir(exist_ok=True)
     parser_mode = cli_args.mode
     now_formatted = dt.datetime.now().strftime(DATETIME_FORMAT)
     file_name = f'{parser_mode}_{now_formatted}.csv'
-    file_path = results_dir / file_name
+    file_path = RESULTS / file_name
     with open(file_path, 'w', encoding='utf-8') as f:
         writer = csv.writer(f, dialect=csv.excel)
         if isinstance(results, dict):

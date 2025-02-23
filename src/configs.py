@@ -2,7 +2,7 @@ import argparse
 import logging
 from logging.handlers import RotatingFileHandler
 
-from constants import FILE, LOG_DIR, LOG_FILE, PRETTY
+from constants import FILE, PRETTY, LOG_FILE, LOG_DIR
 
 
 LOG_FORMAT = '%(asctime)s - [%(levelname)s] - %(message)s'
@@ -32,11 +32,9 @@ def configure_argument_parser(available_modes):
 
 
 def configure_logging():
-    log_dir = LOG_DIR
-    log_dir.mkdir(exist_ok=True)
-    log_file = LOG_FILE
+    LOG_DIR.mkdir(exist_ok=True)
     rotating_handler = RotatingFileHandler(
-        log_file, maxBytes=10 ** 6, backupCount=5
+        LOG_FILE, maxBytes=10 ** 6, backupCount=5
     )
     logging.basicConfig(
         datefmt=DT_FORMAT,

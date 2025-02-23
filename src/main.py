@@ -85,9 +85,8 @@ def download(session):
             'div[role="main"] > table a[href$="pdf-a4.zip"]')['href']
     )
     filename = archive_url.split('/')[-1]
-    downloads_dir = DOWNLOADS_DIR
-    downloads_dir.mkdir(exist_ok=True)
-    archive_path = downloads_dir / filename
+    DOWNLOADS_DIR.mkdir(exist_ok=True)
+    archive_path = DOWNLOADS_DIR / filename
     response = session.get(archive_url)
     with open(archive_path, 'wb') as file:
         file.write(response.content)
