@@ -5,20 +5,9 @@ import logging
 from prettytable import PrettyTable
 
 from constants import (
-    BASE_DIR, DATETIME_FORMAT, RESULTS_SAVE,
+    BASE_DIR, DATETIME_FORMAT, RESULTS_SAVE, RESULTS,
     STATUS_COUNT, PRETTY, FILE
 )
-
-
-def control_output(results, cli_args):
-    """Определяет метод вывода результатов."""
-    output_handlers = {
-        PRETTY: pretty_output,
-        FILE: file_output,
-        None: default_output
-    }
-    output_handler = output_handlers.get(cli_args.output, default_output)
-    output_handler(results, cli_args)
 
 
 def default_output(results, cli_args=None):
@@ -43,19 +32,27 @@ def pretty_output(results, cli_args=None):
 
 
 def file_output(results, cli_args):
-    # = BASE_DIR / 'results' для тестов ЯП
+    # = BASE_DIR / RESULTS для тестов ЯП
     # должна быть константа RESULTS_DIR
-    results_dir = BASE_DIR / 'results'
+    results_dir = BASE_DIR / RESULTS
     results_dir.mkdir(exist_ok=True)
     parser_mode = cli_args.mode
     now_formatted = dt.datetime.now().strftime(DATETIME_FORMAT)
     file_name = f'{parser_mode}_{now_formatted}.csv'
     file_path = results_dir / file_name
     with open(file_path, 'w', encoding='utf-8') as f:
-        writer = csv.writer(f, dialect=csv.excel)
-        if isinstance(results, dict):
-            writer.writerow(STATUS_COUNT)
-            writer.writerows(results.items())
-        else:
-            writer.writerows(results)
+        csv.writer(f, dialect=csv.excel).writerows(results)
     logging.info(RESULTS_SAVE.format(file_path=file_path))
+
+
+OUTPUT_HANDLERS = {
+    PRETTY: pretty_output,
+    FILE: file_output,
+    None: default_output
+}
+
+
+def control_output(results, cli_args):
+    """Определяет метод вывода результатов."""
+    output_handler = OUTPUT_HANDLERS.get(cli_args.output)
+    output_handler(results, cli_args)

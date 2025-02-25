@@ -6,12 +6,14 @@ MAIN_PEP_URL = 'https://peps.python.org/'
 BASE_DIR = Path(__file__).parent
 LOG_DIR = BASE_DIR / 'logs'
 LOG_FILE = LOG_DIR / 'parser.log'
-RESULTS_DIR = BASE_DIR / 'results'
-DOWNLOADS_DIR = BASE_DIR / 'downloads'
+RESULTS = 'results'
+DOWNLOADS = 'downloads'
+RESULTS_DIR = BASE_DIR / RESULTS
+DOWNLOADS_DIR = BASE_DIR / DOWNLOADS
 
 DATETIME_FORMAT = '%Y-%m-%d_%H-%M-%S'
 
-BAD_LINK = 'Сбой при переходе по ссылке: {link}'
+BAD_LINK = 'Сбой при переходе по ссылке: {link}: {error}'
 LINKS_LOG = '{data}'
 PARSER_START = 'Парсер запущен!'
 ARGUMENTS = 'Аргументы командной строки: {args}'
