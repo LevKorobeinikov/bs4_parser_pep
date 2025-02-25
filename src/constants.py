@@ -21,7 +21,6 @@ PARSER_COMPLETE = 'Парсер завершил работу.'
 RESULTS_SAVE = 'Файл с результатами был сохранён: {file_path}'
 ERROR_LOG = 'Ошибка во время работы парсера. {error}'
 UNKNOWN_MODE = 'Неизвестный режим: {args}'
-CRITICAL_ERROR = 'Критическая ошибка в main() {error}'
 
 EXPECTED_STATUS = {
     'A': ('Active', 'Accepted'),
