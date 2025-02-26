@@ -1,24 +1,21 @@
 import logging
 import re
+from collections import defaultdict
 from urllib.parse import urljoin
 
-from collections import defaultdict
 import requests_cache
 from tqdm import tqdm
 
 from constants import (
-    ARGUMENTS, BAD_LINK, BASE_DIR, DOWNLOADS, ERROR_LOG,
+    ARGUMENTS, BAD_LINK, BASE_DIR, DOWNLOADS, DOWNLOADS_COMPLETE, ERROR_LOG,
     EXPECTED_STATUS, LINKS_LOG, LINK_TITLE_EDITOR_AUTHOR, LINK_VERSION_STATUS,
-    MAIN_DOC_URL, MAIN_PEP_URL, PARSER_COMPLETE, PARSER_START, STATUS_COUNT,
-    UNKNOWN_MODE
+    MAIN_DOC_URL, MAIN_PEP_URL, NOT_FOUND, PARSER_ERROR, PARSER_COMPLETE,
+    PARSER_START, STATUS_COUNT
 )
 from configs import configure_argument_parser, configure_logging
+from exceptions import ParserError
 from outputs import control_output
 from utils import find_tag, get_soup
-
-
-NOT_FOUND = 'Ничего не нашлось'
-DOWNLOADS_COMPLETE = 'Архив был загружен и сохранён: {archive_path}'
 
 
 def whats_new(session):
@@ -62,7 +59,7 @@ def latest_versions(session):
             a_tags = ul.find_all('a')
             break
     else:
-        raise LookupError(NOT_FOUND)
+        raise AttributeError(NOT_FOUND)
     for a_tag in a_tags:
         text_match = re.search(
             r'Python (?P<version>\d\.\d+) \((?P<status>.*)\)', a_tag.text
@@ -173,9 +170,9 @@ MODE_TO_FUNCTION = {
 
 
 def main():
+    configure_logging()
+    logging.info(PARSER_START)
     try:
-        configure_logging()
-        logging.info(PARSER_START)
         arg_parser = configure_argument_parser(MODE_TO_FUNCTION.keys())
         args = arg_parser.parse_args()
         logging.info(ARGUMENTS.format(args=args))
@@ -183,14 +180,12 @@ def main():
         if args.clear_cache:
             session.cache.clear()
         results = MODE_TO_FUNCTION[args.mode](session)
-        if args.mode not in MODE_TO_FUNCTION:
-            logging.error(UNKNOWN_MODE.format(args=args.mode))
-            return
         if results is not None:
             control_output(results, args)
-        logging.info(PARSER_COMPLETE)
     except Exception as error:
-        logging.error(ERROR_LOG.format(error=error),)
+        logging.exception(ERROR_LOG.format(error=error),)
+        raise ParserError(PARSER_ERROR) from error
+    logging.info(PARSER_COMPLETE)
 
 
 if __name__ == '__main__':

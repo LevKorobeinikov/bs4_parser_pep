@@ -19,7 +19,10 @@ PARSER_START = 'Парсер запущен!'
 ARGUMENTS = 'Аргументы командной строки: {args}'
 PARSER_COMPLETE = 'Парсер завершил работу.'
 RESULTS_SAVE = 'Файл с результатами был сохранён: {file_path}'
-ERROR_LOG = 'Ошибка во время работы парсера. {error}'
+NOT_FOUND = 'Ничего не нашлось'
+DOWNLOADS_COMPLETE = 'Архив был загружен и сохранён: {archive_path}'
+ERROR_LOG = 'Исключение во время работы парсера. {error}'
+PARSER_ERROR = 'Ошибка парсера.'
 UNKNOWN_MODE = 'Неизвестный режим: {args}'
 
 EXPECTED_STATUS = {
